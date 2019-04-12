@@ -54,7 +54,7 @@ Initially the edges are unknown and a combination of all operations are applied 
     \includegraphics[width=7cm]{images/DARTS.png}
     \end{center}
     \label{mbconv_fig}
-    \caption{A cell with four Nodes and various possible operations. \cite{CONVNETIMAGE}}
+    \caption{A cell with four Nodes and various possible operations. \cite{DARTSMODEL}}
 \end{figure}
 
 The search begins by considering a Softmax over all possible operations that can be performed on a node, reducing the architecture to learning a set of continuous variables. At the end of the search, a discrete architecture is obtained by choosing the most likely operation from the set of all operations. The goal is to jointly learn the architecture $\alpha$ and the weights w within all the mixed operations and using Gradient Descent to optimize the Validation set loss.
