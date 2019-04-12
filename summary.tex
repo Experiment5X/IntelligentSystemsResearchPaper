@@ -37,6 +37,18 @@ Although, the feature map will lose a lot of information, the idea of the convol
     \caption{An Example of a Convolutional Neural Net. Each Convolutional Filter helps highlight certain features of an Image. \cite{CONVNETIMAGE}}
 \end{figure}
 
+\section{RNN: Recurrent Neural Networks}
+Another field of study where AI has seen a lot of progress in recent years is language modeling for which we use a class of neural networks called recurrent neural network (RNN). We can think of RNNs as multiple copies of the same network, each passing a message to a successor in a sequence. Each element of that sequence performs the same task with the output being dependent on the previous element's computation. This can be seen as the RNNs have a memory which captures information about what has been calculated so far.
+\begin{figure}[h]
+    \begin{center}
+    \includegraphics[width=7cm]{images/rnn.jpg}
+    \end{center}
+    \label{fig:rnn_fig}
+    \caption{A recurrent neural network and the unfolding in time of the computation involved in its forward computation. \cite{RNN}}
+\end{figure}
+
+In the Fig.2 we can see an RNN being unfolded into a full network. The unfolding of an RNN simply means that we write out the network for its complete sequence. For example, if the sequence we care about is representing a sentence of 6 words, the RNN would be unfolded into a 6-layer neural network, one layer for every word.
+
 \section{DARTS: Differentiable Architecture Search}
 \subsection{Overview}
 The existing architecture search algorithms are computationally demanding despite their remarkable performance. Different approaches have been proposed to speed up the search, such as restricting the structure of the search space, weights or performance prediction for each individual architecture and weight sharing/inheritance across multiple architectures, but the techniques still are not scalable. 
