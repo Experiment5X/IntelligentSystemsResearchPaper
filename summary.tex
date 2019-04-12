@@ -76,7 +76,7 @@ $\underset{\alpha}{min}  L_{val}(w^*(\alpha), \alpha)$ \\
 
 s.t. $ w^* (\alpha) = argmin_w L_{train}(w, \alpha)$ \\
 
-Calculating the architecture gradient is extremely expensive for each inner optimization, hence a simple approximation technique is proposed to approximate $ w^*( \alpha ) $ by adapting $w$ using only a single training step, without solving the inner optimization. While convergence is not guaranteed, in experiments it is able to reach convergence with a suitable choice of $\xi$ \\ \\
+Calculating the architecture gradient is extremely expensive for each inner optimization, hence a simple approximation technique is proposed to approximate $ w^*( \alpha ) $ by adapting $w$ using only a single training step, without solving the inner optimization. While convergence is not guaranteed, in experiments it is able to reach convergence with a suitable choice of $\xi$ which is the learning rate of training the neural network with the architecture $\alpha$. \\ \\
 $\bigtriangledown_\alpha L_{val}(w^*(\alpha), \alpha)$ \\ \\ 
 $\approx \bigtriangledown_\alpha L_{val}(w - \xi \bigtriangledown_w L_{train}(w, \alpha), \alpha)$ \\
 
