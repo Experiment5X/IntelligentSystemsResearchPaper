@@ -49,6 +49,17 @@ Another field of study where AI has seen a lot of progress in recent years is la
 
 In the Fig.2 we can see an RNN being unfolded into a full network. The unfolding of an RNN simply means that we write out the network for its complete sequence. For example, if the sequence we care about is representing a sentence of 6 words, the RNN would be unfolded into a 6-layer neural network, one layer for every input word vector.
 
+\section{DataSets used in the experiments}
+There are few datasets around which the experiments on DARTS and ProxylessNAS were conducted. A brief understanding of the dataset would help us understand the experiments better.
+\subsection{ImageNet}
+The ImageNet dataset is a very large dataset containing more than 14 million images that have been hand annotated by crowdsources. Image level annotation indicates whether an object is present or absent in the image. For example, whether a car is present in the image or not. The ImageNet dataset contains more than 20,000 categories and each category consists of several hundred images.
+\subsection{CIFAR-10}
+Canadian Institute For Advanced Research -10 is one of the most widely used datasets for machine learning researches. There are 10 different classes of images and in each class, there are about 6,000 images of low resolution (32x32). As the images are of low resolution, they can be easily used by researchers to see what works. As this dataset is relatively small, it can be used as a proxy for training a network model.
+\subsection{Penn TreeBank (PTB)}
+The Penn TreeBank dataset is very commonly used for machine learning of Natural Language Processing. The PTB project annotates naturally occurring text for linguistic structure.
+\subsection{WikiText-2}
+WikiText-2 is a very large language modeling dataset. It basically is a collection of over 100 million tokens which is extracted from a set of featured Wikipedia articles. When compared, WikiText-2 is over two times larger than the preprocessed version of Penn Treebank dataset. WikiText-2 also preserves punctuations and numbers, which are removed in PTB and also features a much larger vocabulary than PTB.
+
 \section{DARTS: Differentiable Architecture Search}
 \subsection{Overview}
 The existing architecture search algorithms are computationally demanding despite their remarkable performance. Different approaches have been proposed to speed up the search, such as restricting the structure of the search space, weights or performance prediction for each individual architecture and weight sharing/inheritance across multiple architectures, but the techniques still are not scalable. 
