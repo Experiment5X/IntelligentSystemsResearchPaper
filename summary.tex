@@ -18,14 +18,14 @@ Since, both the papers are attempting to find the optimal Nerual Network Archite
 
 \section{CNN: Convolutional Neural Networks}
 \subsection{Overview}
-A convolutional neural network (CNN, or ConvNet) is a class of deep neural networks, most commonly used to analyze visual imagery. They usually consist of an input and an output layer and multiple hidden layers. The hidden layers usually consist of one of the following:\\
+A convolutional neural network (CNN, or ConvNet) is a class of deep neural networks, most commonly used to analyze visual imagery. They typically map an input image tensor to an output classification vector. To do the mapping, multiple hidden layers are used which have varying operations, the typical layer types are :\\
 - Convolutional Layers \\
 - RELU Layers (Activation Functions) \\
 - Pooling Layers \\
 - Fully Connected Layers \\
 - Normalization Layers \\
 
-Convolutional Layers are used to emulate the response of an individual neuron to visual stimuli and each convolutional neuron only processes data for its receptive field. They are usually an n$\times$n matrix that are used as a feature detector or a filter. They act like a window with $n^2$ cells, that slides over every pixel of an image  performing certain operations. The resulting output would be a feature map of a much smaller size when compared to the input image. 
+Convolutional Layers are used to emulate the response of an individual neuron to visual stimuli and each convolutional neuron only processes data for its receptive field. They are usually an n$\times$n matrix that are used as a feature detector or a filter. They act like a window with $n^2$ cells, that slides over every pixel of an image  performing a multiplication on each corresponding pixel value, and then summing the result together to get an output pixel for the next layer. The output is a feature map which is a representation of the image with information that is helpful for the problem that the network is trying to solve.
 
 Although, the feature map will lose a lot of information, the idea of the convolutional filter is to only retain the parts of the image that we are interested in retaining and identifying.
  The brain works in a similar fashion, retaining only certain features and looking at the retained features broadly. Categorizing features broadly is the most practical solution for Image Recognition.
@@ -39,16 +39,16 @@ Although, the feature map will lose a lot of information, the idea of the convol
 
 \section{DARTS: Differentiable Architecture Search}
 \subsection{Overview}
-The existing architecture search algorithms are computationally demanding despite their remarkable performance. Different approaches have been proposed to speed up the search, such as restricting the structure of the search space, weights or performance prediction for each individual architecture and weight sharing/inheritance across multiple architectures, but the techniques still aren't scalabe. 
+The existing architecture search algorithms are computationally demanding despite their remarkable performance. Different approaches have been proposed to speed up the search, such as restricting the structure of the search space, weights or performance prediction for each individual architecture and weight sharing/inheritance across multiple architectures, but the techniques still are not scalable. 
 
-In all the past Architecture Search Algorithms, NAS is treated as a black-box optimization problem over a discrete domain, hence a large number of architecture evaluations are required to find the most efficient Architecture. DARTS (Differentiable ARchiTecture Search), instead uses a continuous search space, and uses gradient decent on the the Validation Dataset to optimize the Architecture based on a Loss Function.
+In all the past architecture search algorithms, NAS is treated as a black-box optimization problem over a discrete domain, hence a large number of architecture evaluations are required to find the most efficient architecture. A discrete representation is the most obvious way to encode a network. There are a certain number of hidden layers, each with a specific operation that they perform. The operation types are discrete and so are the number of nodes, so representing it in a continues way is more difficult. DARTS (Differentiable ARchiTecture Search), instead uses a continuous search space, and uses gradient decent on the the Validation Dataset to optimize the Architecture based on a Loss Function.
 
 DARTS unlike the techniques used before it does not fine-tune specific aspects of the architecture, but instead learns the entire architecture building block.  It is simpler than many existing approaches and can handle both CNNs and RNNs.
 
 \subsection{Search Technique}
-DARTS searches for a computation cell as the building block of the final architecture. The learned cell could either be stacked to form a CNN or recursively connected to form an RNN. A cell is a directed acyclic graph with N nodes. A Node could be considered as an output of a operation (like a feature map) and the edges can be considered as the operations (like convolution, max pooling, zero, ReLU) themselves. 
+DARTS searches for a computation cell as the building block of the final architecture. The learned cell could either be stacked to form a CNN or recursively connected to form an RNN. A cell is a directed acyclic graph with N nodes. A node could be considered as an output of an operation (like a feature map) and the edges can be considered as the operations (like convolution, max pooling, zero, ReLU) themselves. 
 
-Initially the edges are unknown and a combination of all operations are applied on each edge. DARTS uses a joint optimization technique to obtain the mixing probabilities for the architecture and the network weights.
+Initially the edges are unknown and a combination of all operations are applied on each edge. DARTS uses a joint optimization technique to obtain the mixing probabilities for the architecture and the network weights. It needs to optimize the weights for the architecture that it currently is examining to reduce the training loss on that network. It also needs to optimize the architecture representation to be as good as possible, which is evaluated by taking the validation loss of the network with the current architecture using the weights that it optimized already. 
  \begin{figure}[h]
     \begin{center}
     \includegraphics[width=7cm]{images/DARTS.png}
@@ -57,15 +57,14 @@ Initially the edges are unknown and a combination of all operations are applied 
     \caption{A cell with four Nodes and various possible operations. \cite{DARTSMODEL}}
 \end{figure}
 
-The search begins by considering a Softmax over all possible operations that can be performed on a node, reducing the architecture to learning a set of continuous variables. At the end of the search, a discrete architecture is obtained by choosing the most likely operation from the set of all operations. The goal is to jointly learn the architecture $\alpha$ and the weights w within all the mixed operations and using Gradient Descent to optimize the Validation set loss.
+The search begins by computing a softmax over all possible operations that can be performed, reducing the architecture to learning a set of continuous variables. The softmax is used to boost the probability of the operation that has the highest value. A regular max function is non-differentiable, so softmax must be used so that the gradients can be computed. At the end of the search, a discrete architecture is obtained by choosing the most likely operation from the set of all operations. The goal is to jointly learn the architecture $\alpha$ and the weights $w$ within all the mixed operations and using gradient descent to optimize the validation set loss.
 
-
-Let $L_{train}$ and $L_{val}$ be the training and the validation loss, respectively. The losses are determined by the Architecture $\alpha$ as well as the weights w in the network. The goal of the search is to perform a bilevel optimization on the upper-level variable $\alpha$, Architecture  and the lower-level variable w as follows:\\ \\
+Let $L_{train}$ and $L_{val}$ be the training and the validation loss, respectively. The losses are determined by the Architecture $\alpha$ as well as the weights $w$ in the network. The goal of the search is to perform a bilevel optimization on the upper-level variable $\alpha$, Architecture  and the lower-level variable w as follows:\\ \\
 $\underset{\alpha}{min}  L_{val}(w^*(\alpha), \alpha)$ \\ 
 
 s.t. $ w^* (\alpha) = argmin_w L_{train}(w, \alpha)$ \\
 
-Calculating the architecture gradient is extremely expensive for each inner optimization, hence a simple approximation technique is proposed to approximate $ w^*( \alpha ) $ by adapting w using only a single training step, without solving the inner optimization. While convergence is not guaranteed, in experiments it is able to reach convergence with a suitable choice of $\xi$ \\ \\
+Calculating the architecture gradient is extremely expensive for each inner optimization, hence a simple approximation technique is proposed to approximate $ w^*( \alpha ) $ by adapting $w$ using only a single training step, without solving the inner optimization. While convergence is not guaranteed, in experiments it is able to reach convergence with a suitable choice of $\xi$ \\ \\
 $\bigtriangledown_\alpha L_{val}(w^*(\alpha), \alpha)$ \\ \\ 
 $\approx \bigtriangledown_\alpha L_{val}(w - \xi \bigtriangledown_w L_{train}(w, \alpha), \alpha)$ \\
 
@@ -74,22 +73,19 @@ Each node in the discrete architecture is formed by retaining the top-K stronges
 \subsection{Experiments}
 The experiments consist of two stages, architecture search and architecture evaluation. In the first stage cell architectures are searched for using DARTS, and the best ones are chosen based on their performance on the validation set. In the second stage, the best performing cells are used to construct larger architectures, which are used to train on the test set. Transferability is also tested, by using the best cells from the tests on CIFAR-10 and PTB, on ImageNet and WikiText-2 (WT2) respectively.
 
-The architecture to be chosen for evaluation are done by running DARTS four times with different random start values and pick the best cells based on their validation set performance training for a really short period of time (100 epochs on CIFAR-10 and 300 epochs on PTB). 
+The architectures to be chosen for evaluation are done by running DARTS four times with different random start values and then they pick the best cells based on their validation set performance training for a really short period of time (100 epochs on CIFAR-10 and 300 epochs on PTB). This is important as the optimization techniques could give varying results based on the initialization parameters.
 
-This is important as the optimization techniques could give varying results based on the initialization parameters.
-
-Once the architectures are selected, the architectures are initialized with random weights, trained from scratch and results are reported based on the performance on the test set.
-The best cells from the selected architectures are evaluated on ImageNet (mobile setting) and WikiText-2, by stacking them on top of each other, and their performance are reported.
+Once the architectures are selected, the architectures are initialized with random weights, trained from scratch and results are reported based on the performance on the test set.The best cells from the selected architectures are evaluated on ImageNet (mobile setting) and WikiText-2, by stacking them on top of each other, and their performances are reported below.
 
 
 \subsection{Results}
-DARTs was able to achieve very promising results during the experiments. When compared to some of the best algorithms for searching architecture for  image classification and language modeling, DARTs was able to provide the lowest error rates and text perplexity for CIFAR-10 and PTB respectively. Architectures optimized using DARTS were able to achieve such competitive results using the least number of parameters and required the lowest number of GPU days to be searched.
+DARTs was able to achieve very promising results during the experiments. When compared to some of the best algorithms for architecture search for image classification and language modeling, DARTs was able to provide the lowest error rates and text perplexity for CIFAR-10 and PTB respectively. Architectures optimized using DARTS were able to achieve such competitive results using the least number of parameters and required the lowest number of GPU days to be searched.
 
-On CIFAR-10, DARTS achieved comparable results with the state of the art NAS algorithms, while using three orders of magnitude less computation resources (i.e. 1.5 or 4 GPU days vs 2000 GPU days for NASNet and 3150 GPU days for AmoebaNet) and with a slightly longer search time, DARTS outperformed ENAS by discovering cells with comparable error rates but less parameters.
+On CIFAR-10, DARTS achieved comparable results with the state-of-the-art NAS algorithms, while using three orders of magnitude less computation resources (i.e. 1.5 or 4 GPU days vs 2000 GPU days for NASNet and 3150 GPU days for AmoebaNet) and with a slightly longer search time, DARTS outperformed ENAS by discovering cells with comparable error rates but less parameters.
 
 Random search is competitive for both convolutional and recurrent models, which reflects the importance of the search space design. Nevertheless, with comparable or less search cost, DARTS is able to significantly improve upon random search in both cases $(2.76 \pm 0.09$ vs $3.29 \pm 0.15$ on CIFAR-10; 55.7 vs 59.4 on PTB).
 
-Experiment with the cell learned on CIFAR-10 can be transferred to ImageNet. DARTS also transfers to WikiText2 better than ENAS.
+Experiments with the cell learned on CIFAR-10 can be transferred to ImageNet. DARTS also transfers to WikiText2 better than ENAS.
 
 \section{ProxylessNAS}
 \subsection{Overview}
