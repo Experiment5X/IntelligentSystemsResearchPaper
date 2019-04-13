@@ -33,10 +33,10 @@ Although, the feature map will lose a lot of information, the idea of the convol
 \end{figure}
 
 \textbf{- RELU Layers (Activation Functions) }\\
- After each Convolutional layer, there is always a nonlinear layer (or activation layer) connected after Its purpose is to introduce nonlinearity to a system that has been computing linear operations in the previous layers. Nonlinear functions like tanh and sigmoid were often used in the past, but researchers found out that ReLU layers help the network to train a lot faster without making a significant difference to the accuracy.
+ After each Convolutional layer, there is always a nonlinear layer (or activation layer) connected after Its purpose is to introduce nonlinearity to a system that has been computing linear operations in the previous layers. This is necessary to make sure that the system can learn non-linear functions, and most machine learning models can only be represented as nonlinear functions. Nonlinear functions like tanh and sigmoid were often used in the past, but researchers found out that ReLU layers help the network to train a lot faster without making a significant difference to the accuracy.
  
 \textbf{- Pooling Layers} \\
-Convolutional networks may include local or global pooling layers. Pooling layers reduce the dimensions of the data by combining the outputs of neuron clusters at one layer into a single neuron in the next layer. In addition, pooling may compute a max or an average. Max pooling uses the maximum value from each of a cluster of neurons at the prior layer. Average pooling uses the average value from each of a cluster of neurons at the prior layer.
+Convolutional networks may include local or global pooling layers. Pooling layers reduce the dimensions of the data by combining output of region in a feature layer together. The combination is done by calculating the average of the previous activations, or taking their averages. Reducing the size of the feature map is necessary to eventually arrive at a label vector.
 
 \textbf{- Fully Connected Layers} \\
 Fully connected layers connect every neuron in one layer to every neuron in another layer. It is in principle the same as the traditional multi-layer perceptron neural network (MLP). The flattened matrix goes through a fully connected layer to classify the images.
