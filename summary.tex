@@ -2,6 +2,7 @@
 
 \usepackage{graphicx}
 \usepackage{amsmath}
+
 \title{DARTS and ProxylessNAS Summaries}
 \author{Aamir Jamal, Pawan Shetty, Adam Spindler}
 
@@ -11,16 +12,21 @@
 \section{Introduction}
 Neural networks are very complicated systems and require a lot of tuning to work properly on certain tasks such as image classification or text classification. Parameters of the networks are learned by using gradient descent to find a minimum of a loss function that describes the error that the network has on a particular set of training data. The architecture of a network, until recently, has been hand crafted by researchers.
 
-NAS – Neural Network Architecture Search, are algorithmic solutions to automate the manual process of architecture design. Various techniques have been used to find neural network architectures automatically. Reinforcement learning has been popular for the task, but is extremely computationally expensive requiring on the order of thousands of GPU hours to find a suitable setup. The two papers examined in this work, DARTS \cite{DARTSMODEL} and ProxylessNAS \cite{cai2018proxylessnas}, propose techniques to create a continuous loss function that includes a representation of the network architecture so that gradient descent can be used to find an optimal architecture in much less time.
 
-Since, both the papers are attempting to find the optimal Nerual Network Architecture for CNN's (DARTS and Proxyless) and RNN's (DARTS Only). Hence, it would help to briefly overview the functioning of these two varying Neural Networks.
+NAS – Neural Network Architecture Search, are algorithmic solutions to automate the manual process of architecture design. Various techniques have been used to find neural network architectures automatically. Reinforcement learning and Evolution has been popular for the task, but is computationally expensive requiring on the order of thousands of GPU hours to find a suitable setup. 
+
+Many techniques for speeding up this process have been proposed, such as restricting the search space to a particular structure or using weights or performance predictions for each developed architecture or sharing weights across multiple architectures. The main cause for such inefficiency is the fact that these Architecture search techniques are considered as black-box optimizations, hence a large number of architectures need to be evaluated to find the most efficient one. 
+
+The two papers examined in this work, DARTS \cite{DARTSMODEL} and ProxylessNAS \cite{cai2018proxylessnas}, propose techniques to create a continuous loss function that includes a representation of the network architecture so that gradient descent can be used to find an optimal architecture in much less time.
+
+Since both the papers are attempting to find the optimal Neural Network Architecture for CNN's (DARTS and Proxyless) and RNN's (DARTS Only). Hence, it would help to briefly overview the functioning of these two varying Neural Networks.
 
 
 \section{CNN: Convolutional Neural Networks}
 \subsection{Overview}
 A convolutional neural network (CNN, or ConvNet) is a class of deep neural networks, most commonly used to analyze visual imagery. They typically map an input image tensor to an output classification vector. To do the mapping, multiple hidden layers are used which have varying operations, the typical layer types are :\\
 \textbf{- Convolutional Layers} \\
-Convolutional Layers are used to emulate the response of an individual neuron to visual stimuli and each convolutional neuron only processes data for its receptive field. They are usually an n$\times$n matrix that are used as a feature detector or a filter. They act like a window with $n^2$ cells, that slides over every pixel of an image  performing a multiplication on each corresponding pixel value, and then summing the result together to get an output pixel for the next layer. The output is a feature map which is a representation of the image with information that is helpful for the problem that the network is trying to solve.
+Convolutional Layers are used to emulate the response of an individual neuron to visual stimuli and each convolutional neuron only processes data for its receptive field. They are usually an n $\times$ n matrix that are used as a feature detector or a filter. They act like a window with $n^2$ cells, that slides over every pixel of an image  performing a multiplication on each corresponding pixel value, and then summing the result together to get an output pixel for the next layer. The output is a feature map which is a representation of the image with information that is helpful for the problem that the network is trying to solve.
 
 Although, the feature map will lose a lot of information, the idea of the convolutional filter is to only retain the parts of the image that we are interested in retaining and identifying.
  The brain works in a similar fashion, retaining only certain features and looking at the retained features broadly. Categorizing features broadly is the most practical solution for Image Recognition.
@@ -33,10 +39,10 @@ Although, the feature map will lose a lot of information, the idea of the convol
 \end{figure}
 
 \textbf{- RELU Layers (Activation Functions) }\\
- After each Convolutional layer, there is always a nonlinear layer (or activation layer) connected after Its purpose is to introduce nonlinearity to a system that has been computing linear operations in the previous layers. This is necessary to make sure that the system can learn non-linear functions, and most machine learning models can only be represented as nonlinear functions. Nonlinear functions like tanh and sigmoid were often used in the past, but researchers found out that ReLU layers help the network to train a lot faster without making a significant difference to the accuracy.
+ After each Convolutional layer, there is always a nonlinear layer (or activation layer). Its purpose is to introduce nonlinearity to a system that has been computing linear operations in the previous layers. This is necessary to make sure that the system can learn non-linear functions, and most machine learning models can only be represented as nonlinear functions. Nonlinear functions like tanh and sigmoid were often used in the past, but researchers found out that ReLU layers help the network to train a lot faster without making a significant difference to the accuracy.
  
 \textbf{- Pooling Layers} \\
-Convolutional networks may include local or global pooling layers. Pooling layers reduce the dimensions of the data by combining output of region in a feature layer together. The combination is done by calculating the average of the previous activations, or taking their averages. Reducing the size of the feature map is necessary to eventually arrive at a label vector.
+Convolutional networks may include local or global pooling layers. Pooling layers reduce the dimensions of the data by combining output of region in a feature layer together. The combination is done by calculating the average of the previous activations, or computing their max. Reducing the size of the feature map is necessary to eventually arrive at a label vector.
 
 \textbf{- Fully Connected Layers} \\
 Fully connected layers connect every neuron in one layer to every neuron in another layer. It is in principle the same as the traditional multi-layer perceptron neural network (MLP). The flattened matrix goes through a fully connected layer to classify the images.
@@ -58,8 +64,8 @@ Another field of study where AI has seen a lot of progress in recent years is la
 
 In the Fig.2 we can see an RNN being unfolded into a full network. The unfolding of an RNN simply means that we write out the network for its complete sequence. For example, if the sequence we care about is representing a sentence of 6 words, the RNN would be unfolded into a 6-layer neural network, one layer for every input word vector.
 
-\section{DataSets used in the experiments}
-There are few datasets around which the experiments on DARTS and ProxylessNAS were conducted. A brief understanding of the dataset would help us understand the experiments better.
+\section{Datasets used in the experiments}
+The CNN architectures developed in the paper were tested using CIFAR-10 and ImageNet Datasets. Both these Datasets contain a large number of Images, that are used by Researchers and Scientists for testing Visual Recognition.  The RNN architectures were tested using PTB and WikiText-2 Datasets. These are large Tree Banks, that represent both the syntactic and semantic structure of english sentences. They are mainly used in Natural Language Processing Research, to help test the systems developed for speech recognition, etc. A brief understanding of the dataset would help us understand the experiments better.
 \subsection{ImageNet}
 The ImageNet dataset is a very large dataset containing more than 14 million images that have been hand annotated by crowdsources. Image level annotation indicates whether an object is present or absent in the image. For example, whether a car is present in the image or not. The ImageNet dataset contains more than 20,000 categories and each category consists of several hundred images.
 \subsection{CIFAR-10}
@@ -71,11 +77,11 @@ WikiText-2 is a very large language modeling dataset. It basically is a collecti
 
 \section{DARTS: Differentiable Architecture Search}
 \subsection{Overview}
-The existing architecture search algorithms are computationally demanding despite their remarkable performance. Different approaches have been proposed to speed up the search, such as restricting the structure of the search space, weights or performance prediction for each individual architecture and weight sharing/inheritance across multiple architectures, but the techniques still are not scalable. 
+The existing architecture search algorithms, that use reinforcement learning (RL) or evolution to discover neural network architectures, are computationally demanding despite their remarkable performance. In these architecture search algorithms, NAS is treated as a black-box optimization problem over a discrete domain, hence a large number of architecture evaluations are required to find the most efficient architecture. Different approaches have been proposed to speed up the search, such as restricting the structure of the search space, weights or performance prediction for each individual architecture and weight sharing/inheritance across multiple architectures, but the techniques still are not scalable. 
 
-In all the past architecture search algorithms, NAS is treated as a black-box optimization problem over a discrete domain, hence a large number of architecture evaluations are required to find the most efficient architecture. A discrete representation is the most obvious way to encode a network. There are a certain number of hidden layers, each with a specific operation that they perform. The operation types are discrete and so are the number of nodes, so representing it in a continues way is more difficult. DARTS (Differentiable ARchiTecture Search), instead uses a continuous search space, and uses gradient decent on the the Validation Dataset to optimize the Architecture based on a Loss Function.
+ A discrete representation(used in all the past architecture search algorithms) is the most obvious way to encode a network. There are a certain number of hidden layers, each with a specific operation that they perform. The operation types are discrete and so are the number of nodes, so representing it in a continuous way is more difficult. 
 
-DARTS unlike the techniques used before it does not fine-tune specific aspects of the architecture, but instead learns the entire architecture building block.  It is simpler than many existing approaches and can handle both CNNs and RNNs.
+DARTS (Differentiable ARchiTecture Search), instead uses a continuous search space, and uses gradient decent on the the Validation Dataset to optimize the Architecture based on a Loss Function. Unlike the techniques used before it, DARTS does not fine-tune specific aspects of the architecture, but instead learns the entire architecture building block.  It is simpler than many existing approaches and can handle both CNNs and RNNs.
 
 \subsection{Search Technique}
 DARTS searches for a computation cell as the building block of the final architecture. The learned cell could either be stacked to form a CNN or recursively connected to form an RNN. A cell is a directed acyclic graph with N nodes. A node could be considered as an output of an operation (like a feature map) and the edges can be considered as the operations (like convolution, max pooling, zero, ReLU) themselves. 
@@ -111,13 +117,13 @@ Once the architectures are selected, the architectures are initialized with rand
 
 
 \subsection{Results}
-DARTs was able to achieve very promising results during the experiments. When compared to some of the best algorithms for architecture search for image classification and language modeling, DARTs was able to provide the lowest error rates and text perplexity for CIFAR-10 and PTB respectively. Architectures optimized using DARTS were able to achieve such competitive results using the least number of parameters and required the lowest number of GPU days to be searched.
+DARTS was able to achieve very promising results during the experiments. When compared to some of the best algorithms for architecture search for image classification and language modeling, DARTS was able to provide the lowest error rates and text perplexity for CIFAR-10 and PTB respectively. Architectures optimized using DARTS were able to achieve such competitive results using the least number of parameters and required the lowest number of GPU days to be searched.
 
-On CIFAR-10, DARTS achieved comparable results with the state-of-the-art NAS algorithms, while using three orders of magnitude less computation resources (i.e. 1.5 or 4 GPU days vs 2000 GPU days for NASNet and 3150 GPU days for AmoebaNet) and with a slightly longer search time, DARTS outperformed ENAS by discovering cells with comparable error rates but less parameters.
+On CIFAR-10, DARTS achieved comparable results with the state-of-the-art NAS algorithms, while using three orders of magnitude less computation resources (i.e. 1.5 or 4 GPU days vs 2000 GPU days for NASNet and 3150 GPU days for AmoebaNet) and with a slightly longer search time, DARTS outperformed ENAS(Efficient neural architecture search via parameter sharing); another recently discovered technique for architecture search that has shown the most promising results on CIFAR-10, ImageNet and WikiText2; by discovering cells with comparable error rates but less parameters.
 
-Random search is competitive for both convolutional and recurrent models, which reflects the importance of the search space design. Nevertheless, with comparable or less search cost, DARTS is able to significantly improve upon random search in both cases $(2.76 \pm 0.09$ vs $3.29 \pm 0.15$ on CIFAR-10; 55.7 vs 59.4 on PTB).
+Random search is competitive for both convolutional and recurrent models, which reflects the importance of the search space design. Nevertheless, with comparable or less search cost, DARTS is able to significantly improve upon random search in both cases $(2.76 \pm 0.09$  test error on DARTS vs $3.29 \pm 0.15$ test error with Random search on CIFAR-10; 55.7 test perplexity with DARTS vs 59.4 test perplexity with Random Search on PTB). 
 
-Experiments with the cell learned on CIFAR-10 can be transferred to ImageNet. DARTS also transfers to WikiText2 better than ENAS.
+Experiments with the cell learned on CIFAR-10 can be transferred to ImageNet. DARTS also transfers to WikiText2 better than ENAS(Efficient neural architecture search via parameter sharing).
 
 \section{ProxylessNAS}
 \subsection{Overview}
